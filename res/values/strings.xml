@@ -4,5 +4,11 @@
     <string name="app_name">MP3Player</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    
+    <string name="activity_title_remote">RemoteFragmentActivity</string>
+    <string name="activity_title_local">LocalFragmentActivity</string>
+    
+    <string name="menu_update">Update</string>
+    <string name="menu_about">About</string>
 
 </resources>
