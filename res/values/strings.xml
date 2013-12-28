@@ -7,6 +7,7 @@
     
     <string name="activity_title_remote">RemoteFragmentActivity</string>
     <string name="activity_title_local">LocalFragmentActivity</string>
+     <string name="activity_title_player">PlayerActivity</string>
     
     <string name="menu_update">Update</string>
     <string name="menu_about">About</string>
