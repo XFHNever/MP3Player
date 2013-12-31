@@ -17,11 +17,18 @@ import org.xml.sax.XMLReader;
 import com.example.mp3player.R;
 import com.example.mp3player.download.HttpDownloader;
 import com.example.mp3player.model.Mp3Info;
+import com.example.mp3player.service.DownloadService;
 import com.example.mp3player.util.Mp3ListContentHandler;
 
 import android.R.anim;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -33,6 +40,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.AdapterView.OnItemClickListener;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class RemoteFragmentActivity extends FragmentActivity{
      @Override
     protected void onCreate(Bundle arg0) {
@@ -53,6 +61,18 @@ public class RemoteFragmentActivity extends FragmentActivity{
 		public void onCreate(Bundle savedInstanceState) {
 			// TODO Auto-generated method stub
 			super.onCreate(savedInstanceState);
+			  StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+              .detectDiskReads()
+              .detectDiskWrites()
+              .detectNetwork()   // or .detectAll() for all detectable problems
+              .penaltyLog()
+              .build());
+      StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+              .detectLeakedSqlLiteObjects()
+              .detectLeakedClosableObjects()
+              .penaltyLog()
+              .penaltyDeath()
+              .build());
 		}
 
 		@Override
@@ -125,11 +145,24 @@ public class RemoteFragmentActivity extends FragmentActivity{
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
 					if(mp3Infos != null) {
-						Mp3Info mp3Info = mp3Infos.get(arg2);
-						Intent intent = new Intent();
-						intent.putExtra("mp3Info", mp3Info);
-						intent.setClass(getActivity(), PlayerActivity.class);
-						startActivity(intent);
+						final Mp3Info mp3Info = mp3Infos.get(arg2);
+						new AlertDialog.Builder(getActivity()) 
+						.setTitle("下载" + mp3Info.getMp3Name())
+						.setMessage("确定吗？")
+						.setPositiveButton("是", new OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								Intent intent = new Intent();
+								intent.putExtra("mp3Info", mp3Info);
+								intent.setClass(getActivity(), DownloadService.class);
+								getActivity().startService(intent);
+							}
+						})
+						.setNegativeButton("否", null)
+						.show();	
+						
 					}
 					
 				}

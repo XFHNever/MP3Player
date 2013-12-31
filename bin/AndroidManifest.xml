@@ -41,6 +41,9 @@
 	       android:label="@string/activity_title_player" >
         </activity>
         
+        <service android:name="com.example.mp3player.service.DownloadService"></service>
+        <service android:name="com.example.mp3player.service.PlayerService"></service>
+        
     </application>
 
 </manifest>

@@ -88,7 +88,7 @@ public class FileUtils {
 	 * 读取目录中的Mp3文件的名字和大小
 	 */
 	public List<Mp3Info> getMp3Files(String path) {
-		List<com.example.mp3player.model.Mp3Info> mp3Infos = new ArrayList<Mp3Info>();
+		List<Mp3Info> mp3Infos = new ArrayList<Mp3Info>();
 		File file = new File(SDCardRoot + File.separator + path);
 		File[] files = file.listFiles();
 		FileUtils fileUtils = new FileUtils();
