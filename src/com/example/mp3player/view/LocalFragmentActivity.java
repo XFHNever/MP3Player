@@ -18,6 +18,7 @@ import org.xml.sax.XMLReader;
 import com.example.mp3player.R;
 import com.example.mp3player.download.HttpDownloader;
 import com.example.mp3player.model.Mp3Info;
+import com.example.mp3player.util.FileUtils;
 import com.example.mp3player.util.Mp3ListContentHandler;
 
 import android.annotation.SuppressLint;
@@ -145,9 +146,18 @@ public class LocalFragmentActivity extends FragmentActivity{
 		     }
 		     
 		     private void updateListView() {
-		    	 String xml = downloadXML("http://10.0.2.2:8080/mp3/resources.xml");
-		    	 mp3Infos = parse(xml);
-		    	 SimpleAdapter simpleAdapter = buildAdapter(mp3Infos);
+		 		FileUtils fileUtils = new FileUtils();
+				mp3Infos = fileUtils.getMp3Files("mp3/");
+				List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+				for (Iterator iterator = mp3Infos.iterator(); iterator.hasNext();) {
+					Mp3Info mp3Info = (Mp3Info) iterator.next();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("mp3_name", mp3Info.getMp3Name());
+					map.put("mp3_size", mp3Info.getMp3Size());
+					list.add(map);
+				}
+				
+				SimpleAdapter simpleAdapter = new SimpleAdapter(getActivity(), list, R.layout.mp3info_item, new String[]{"mp3_name","mp3_size"}, new int[]{R.id.mp3_name,R.id.mp3_size});
 		    	 localListView.setAdapter(simpleAdapter);
 		    	 localListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -166,21 +176,7 @@ public class LocalFragmentActivity extends FragmentActivity{
 		    		 
 				});
 		     }
-		     
-		     private SimpleAdapter buildAdapter(List<Mp3Info> mp3Infos) {
-		    	 List<HashMap<String, String>> list = new ArrayList<HashMap<String,String>>();
-		    	 for(Iterator iterator = mp3Infos.iterator();iterator.hasNext();) {
-		    		 Mp3Info mp3Info = (Mp3Info) iterator.next();
-		    		 HashMap<String, String> map = new HashMap<String, String>();
-		    		 map.put("mp3_name", mp3Info.getMp3Name());
-		    		 map.put("mp3_size", mp3Info.getMp3Size());
-		    		 list.add(map);
-		    	 }
-		    	 
-		    	 SimpleAdapter simpleAdapter = new SimpleAdapter(getActivity(), list, R.layout.mp3info_item, new String[]{"mp3_name","mp3_size"}, new int[]{R.id.mp3_name,R.id.mp3_size});
-		         return simpleAdapter;
-		     }
-		     
+
 		     
 		     
 	     }
